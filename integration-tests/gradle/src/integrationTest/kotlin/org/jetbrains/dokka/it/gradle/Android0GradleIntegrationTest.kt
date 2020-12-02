@@ -1,3 +1,4 @@
+/*
 package org.jetbrains.dokka.it.gradle
 
 import org.gradle.testkit.runner.TaskOutcome
@@ -90,3 +91,4 @@ class Android0GradleIntegrationTest(override val versions: BuildVersions) : Abst
         "it.android/IntegrationTestActivity/requireViewById/#kotlin.Int/PointingToGenericParameters(0)/"
     )
 }
+*/

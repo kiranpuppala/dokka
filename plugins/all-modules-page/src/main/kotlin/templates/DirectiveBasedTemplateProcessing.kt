@@ -21,7 +21,8 @@ class DirectiveBasedHtmlTemplateProcessingStrategy(private val context: DokkaCon
     private val navigationFragments = ConcurrentHashMap<String, Element>()
 
     private val substitutors = context.plugin<AllModulesPagePlugin>().query { substitutor }
-    private val externalModuleLinkResolver = context.plugin<AllModulesPagePlugin>().querySingle { externalModuleLinkResolver }
+    private val externalModuleLinkResolver by lazy { context.plugin<AllModulesPagePlugin>().querySingle { externalModuleLinkResolver } }
+    private val versionsNavigationCreator by lazy { context.plugin<AllModulesPagePlugin>().querySingle { versionsNavigationCreator } }
 
     override suspend fun process(input: File, output: File): Boolean = coroutineScope {
         if (input.extension == "html") {
@@ -33,6 +34,7 @@ class DirectiveBasedHtmlTemplateProcessingStrategy(private val context: DokkaCon
                         is ResolveLinkCommand -> resolveLink(it, command, output)
                         is AddToNavigationCommand -> navigationFragments[command.moduleName] = it
                         is SubstitutionCommand -> substitute(it, TemplatingContext(input, output, it, command))
+                        is ReplaceVersionsCommand -> replace(it, TemplatingContext(input, output, it, command))
                         else -> context.logger.warn("Unknown templating command $command")
                     }
                 }
@@ -40,6 +42,11 @@ class DirectiveBasedHtmlTemplateProcessingStrategy(private val context: DokkaCon
             }
             true
         } else false
+    }
+
+    private fun replace(element: Element, commandContext: TemplatingContext<ReplaceVersionsCommand>) {
+        element.empty()
+        element.append(versionsNavigationCreator(commandContext.output.toPath()))
     }
 
     private fun substitute(element: Element, commandContext: TemplatingContext<SubstitutionCommand>) {

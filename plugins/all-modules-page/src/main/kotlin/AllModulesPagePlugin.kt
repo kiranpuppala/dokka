@@ -2,6 +2,7 @@ package org.jetbrains.dokka.allModulesPage
 
 import org.jetbrains.dokka.CoreExtensions
 import org.jetbrains.dokka.allModulesPage.templates.*
+import org.jetbrains.dokka.allModulesPage.versioning.*
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.resolvers.local.DokkaLocationProviderFactory
 import org.jetbrains.dokka.base.resolvers.local.LocationProviderFactory
@@ -17,6 +18,8 @@ class AllModulesPagePlugin : DokkaPlugin() {
     val allModulesPageCreator by extensionPoint<PageCreator>()
     val allModulesPageTransformer by extensionPoint<PageTransformer>()
     val externalModuleLinkResolver by extensionPoint<ExternalModuleLinkResolver>()
+    val versioningHandler by extensionPoint<VersioningHandler>()
+    val versionsNavigationCreator by extensionPoint<VersionsNavigationCreator>()
 
     val substitutor by extensionPoint<Substitutor>()
 
@@ -60,5 +63,17 @@ class AllModulesPagePlugin : DokkaPlugin() {
 
     val multiModuleLinkResolver by extending {
         externalModuleLinkResolver providing ::DefaultExternalModuleLinkResolver
+    }
+
+    val defaultVersioningHandler by extending {
+        versioningHandler providing ::DefaultVersioningHandler
+    }
+
+    val defaultVersionsNavigationCreator by extending {
+        versionsNavigationCreator providing ::HtmlVersionsNavigationCreator
+    }
+
+    val resolveLinkConsumer by extending {
+        plugin<DokkaBase>().immediateHtmlCommandConsumer providing ::ReplaceVersionCommandConsumer
     }
 }

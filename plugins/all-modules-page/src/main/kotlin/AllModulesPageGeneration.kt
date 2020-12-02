@@ -14,6 +14,9 @@ class AllModulesPageGeneration(private val context: DokkaContext) : Generation {
     private val allModulesPagePlugin by lazy { context.plugin<AllModulesPagePlugin>() }
 
     override fun Timer.generate() {
+        report("Copy previous documentation")
+        handlePreviousDocs()
+
         report("Creating all modules page")
         val pages = createAllModulesPage()
 
@@ -28,6 +31,8 @@ class AllModulesPageGeneration(private val context: DokkaContext) : Generation {
     }
 
     override val generationName = "index page for project"
+
+    fun handlePreviousDocs() = allModulesPagePlugin.querySingle { versioningHandler }.invoke()
 
     fun createAllModulesPage() = allModulesPagePlugin.querySingle { allModulesPageCreator }.invoke()
 

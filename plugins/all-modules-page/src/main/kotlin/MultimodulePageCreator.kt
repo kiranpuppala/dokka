@@ -2,12 +2,14 @@ package org.jetbrains.dokka.allModulesPage
 
 import org.jetbrains.dokka.DokkaConfiguration.DokkaModuleDescription
 import org.jetbrains.dokka.DokkaConfiguration.DokkaSourceSet
+import org.jetbrains.dokka.allModulesPage.templates.ReplaceVersionsCommand
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.parsers.moduleAndPackage.ModuleAndPackageDocumentation.Classifier.Module
 import org.jetbrains.dokka.base.parsers.moduleAndPackage.ModuleAndPackageDocumentationParsingContext
 import org.jetbrains.dokka.base.parsers.moduleAndPackage.parseModuleAndPackageDocumentation
 import org.jetbrains.dokka.base.parsers.moduleAndPackage.parseModuleAndPackageDocumentationFragments
 import org.jetbrains.dokka.base.resolvers.anchors.SymbolAnchorHint
+import org.jetbrains.dokka.base.templating.InsertTemplateExtra
 import org.jetbrains.dokka.base.transformers.pages.comments.DocTagToContentConverter
 import org.jetbrains.dokka.base.translators.documentables.PageContentBuilder
 import org.jetbrains.dokka.links.DRI
@@ -39,6 +41,7 @@ class MultimodulePageCreator(
             kind = ContentKind.Cover,
             sourceSets = sourceSetData
         ) {
+            group(extra = PropertyContainer.withAll(InsertTemplateExtra(ReplaceVersionsCommand))) {  }
             header(2, "All modules:")
             table(styles = setOf(MultimoduleTable)) {
                 modules.map { module ->
