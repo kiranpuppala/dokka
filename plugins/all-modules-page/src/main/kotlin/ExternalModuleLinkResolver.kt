@@ -1,4 +1,4 @@
-package org.jetbrains.dokka.allModulesPage.templates
+package org.jetbrains.dokka.allModulesPage
 
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.base.DokkaBase

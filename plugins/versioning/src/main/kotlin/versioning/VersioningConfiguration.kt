@@ -1,9 +1,9 @@
-package org.jetbrains.dokka.allModulesPage
+package org.jetbrains.dokka.versioning
 
 import org.jetbrains.dokka.plugability.ConfigurableBlock
 import java.io.File
 
-data class MultimoduleConfiguration(
+data class VersioningConfiguration(
     var olderVersions: File? = defaultOlderVersions,
     var currentVersion: String = defaultVersion,
 ) : ConfigurableBlock {

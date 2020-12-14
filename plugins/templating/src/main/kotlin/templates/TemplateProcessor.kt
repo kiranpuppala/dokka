@@ -1,16 +1,12 @@
-package org.jetbrains.dokka.allModulesPage.templates
+package org.jetbrains.dokka.templates
 
 import kotlinx.coroutines.*
-import org.jetbrains.dokka.allModulesPage.AllModulesPagePlugin
 import org.jetbrains.dokka.base.templating.Command
 import org.jetbrains.dokka.plugability.DokkaContext
 import org.jetbrains.dokka.plugability.plugin
 import org.jetbrains.dokka.plugability.query
 import org.jsoup.nodes.Element
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
-import kotlin.coroutines.coroutineContext
 
 interface TemplateProcessor {
     fun process()
@@ -25,7 +21,7 @@ class DefaultTemplateProcessor(
     private val context: DokkaContext,
 ): TemplateProcessor {
 
-    private val strategies: List<TemplateProcessingStrategy> = context.plugin<AllModulesPagePlugin>().query { templateProcessingStrategy }
+    private val strategies: List<TemplateProcessingStrategy> = context.plugin<TemplatingPlugin>().query { templateProcessingStrategy }
 
     override fun process() = runBlocking(Dispatchers.Default) {
         coroutineScope {

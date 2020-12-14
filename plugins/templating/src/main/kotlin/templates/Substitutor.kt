@@ -1,4 +1,4 @@
-package org.jetbrains.dokka.allModulesPage.templates
+package org.jetbrains.dokka.templates
 
 import org.jetbrains.dokka.base.templating.SubstitutionCommand
 

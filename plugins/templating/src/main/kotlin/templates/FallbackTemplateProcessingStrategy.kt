@@ -1,4 +1,4 @@
-package org.jetbrains.dokka.allModulesPage.templates
+package org.jetbrains.dokka.templates
 
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.coroutineScope

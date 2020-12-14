@@ -1,10 +1,8 @@
-package org.jetbrains.dokka.allModulesPage.versioning
+package org.jetbrains.dokka.versioning
 
 import kotlinx.html.unsafe
 import kotlinx.html.visit
 import kotlinx.html.visitAndFinalize
-import org.jetbrains.dokka.allModulesPage.AllModulesPagePlugin
-import org.jetbrains.dokka.allModulesPage.templates.ReplaceVersionsCommand
 import org.jetbrains.dokka.base.renderers.html.TemplateBlock
 import org.jetbrains.dokka.base.renderers.html.command.consumers.ImmediateResolutionTagConsumer
 import org.jetbrains.dokka.base.renderers.html.templateCommandFor
@@ -17,7 +15,7 @@ import org.jetbrains.dokka.plugability.querySingle
 class ReplaceVersionCommandConsumer(context: DokkaContext) : ImmediateHtmlCommandConsumer {
 
     private val versionsNavigationCreator =
-        context.plugin<AllModulesPagePlugin>().querySingle { versionsNavigationCreator }
+        context.plugin<VersioningPlugin>().querySingle { versionsNavigationCreator }
 
     override fun canProcess(command: Command) = command is ReplaceVersionsCommand
 
@@ -44,5 +42,4 @@ class ReplaceVersionCommandConsumer(context: DokkaContext) : ImmediateHtmlComman
                 +versionsNavigationCreator()
             }
         }
-
 }

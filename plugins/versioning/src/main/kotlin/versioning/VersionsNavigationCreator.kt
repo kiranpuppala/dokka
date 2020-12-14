@@ -1,11 +1,10 @@
-package org.jetbrains.dokka.allModulesPage.versioning
+package org.jetbrains.dokka.versioning
 
 import kotlinx.html.a
 import kotlinx.html.button
 import kotlinx.html.div
 import kotlinx.html.i
 import kotlinx.html.stream.appendHTML
-import org.jetbrains.dokka.allModulesPage.AllModulesPagePlugin
 import org.jetbrains.dokka.plugability.DokkaContext
 import org.jetbrains.dokka.plugability.plugin
 import org.jetbrains.dokka.plugability.querySingle
@@ -15,14 +14,15 @@ interface VersionsNavigationCreator : (Path) -> String, () -> String
 
 class HtmlVersionsNavigationCreator(val context: DokkaContext) : VersionsNavigationCreator {
 
-    private val versioningHandler = context.plugin<AllModulesPagePlugin>().querySingle { versioningHandler }
+    private val versioningHandler by lazy { context.plugin<VersioningPlugin>().querySingle { versioningHandler } }
 
     override fun invoke(): String =
         versioningHandler.currentVersion()?.let { this(it) }.orEmpty()
 
-    override fun invoke(output: Path): String =
-        versioningHandler.getVersions().takeIf { it.isNotEmpty() }?.let { versions ->
-            StringBuilder().appendHTML().div {
+    override fun invoke(output: Path): String {
+        val position = output.takeIf { it.toFile().isDirectory } ?: output.parent
+        return versioningHandler.getVersions().takeIf { it.isNotEmpty() }?.let { versions ->
+            StringBuilder().appendHTML().div(classes = "versions-dropdown") {
                 button(classes = "versions-dropdown-button") {
                     versions.entries.first { it.value == output }.let {
                         text(it.key)
@@ -31,11 +31,12 @@ class HtmlVersionsNavigationCreator(val context: DokkaContext) : VersionsNavigat
                 }
                 div(classes = "versions-dropdown-data") {
                     versions.forEach { (version, path) ->
-                        a(href = output.relativize(path).toString()) {
+                        a(href = position.relativize(path).toString()) {
                             text(version)
                         }
                     }
                 }
             }.toString()
         }.orEmpty()
+    }
 }
